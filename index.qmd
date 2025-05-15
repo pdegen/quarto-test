@@ -12,12 +12,14 @@ format:
   html:
     toc: true # add a table of contents
     toc-depth: 4 # show level 1-4 subheadings in the table of contents
-  pdf: default
+  # pdf: default # cannot render pdf with interactive html
 
 echo: false
 ---
 
-## Names
+## Popular Names
+
+Most popular newborn names in ZH pear year
 
 ```{python}
 import numpy as np
@@ -28,22 +30,24 @@ import seaborn as sns
 sns.set()
 
 f = "bev370od3700.csv"
-df = pd.read_csv(f, index_col=0)
-print(f"Rows: {len(df)}")
-print(f"Cols: {list(df.columns)}")
+df = pd.read_csv(f)
 
 #df["SexLang"].value_counts().plot(kind="pie")
 value_cnts = df["SexLang"].value_counts()
 fig, ax = plt.subplots(1, 1, figsize=(4,4))
 ax.pie(value_cnts, autopct='%.0f%%', labeldistance=0.9, labels=value_cnts.index)
+
+ix = df.groupby(["SexLang", "StichtagDatJahr"])["AnzGebuWir"].idxmax()
+display(df.loc[ix].sort_values(by=["StichtagDatJahr","SexLang"], ascending=False).set_index("StichtagDatJahr"))
 pass
 ```
 
-## Plotly Test
+## Plotly test
 
 ```{python}
 #| title: GDP and Life Expectancy
-#| 
+#| fig-cap: "Test caption"
+#| label: fig-plotly # label must start with fig-
 import plotly.express as px
 df = px.data.gapminder()
 px.scatter(
@@ -54,3 +58,5 @@ px.scatter(
   range_x=[100,100000], range_y=[25,90]
 )
 ```
+
+As we see in @fig-plotly...
